@@ -1,5 +1,6 @@
 package com.example.redma.ballrolling
 
+import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -7,22 +8,25 @@ import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import androidx.core.content.getSystemService
 import androidx.core.os.postDelayed
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() , SensorEventListener{
 
     private lateinit var sensorManager: SensorManager
-    private lateinit var canvasView: CanvasView
     private var sensorX : Float = 0f
     private var sensorY : Float = 0f
     private var sensorZ : Float = 0f
 
     private var period = 100L
-    private val handler : Handler = Handler()
+    val handler : Handler = Handler()
     private lateinit var runnable: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //センサーマネージャーのインスタンスを取得
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         setContentView(R.layout.activity_main)
 
         timerSet()
@@ -30,8 +34,9 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
 
     override fun onResume() {
         super.onResume()
+        //加速度センサーを取得してからリスナーを登録
         var accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        sensorManager.registerListener(this,accel, SensorManager.SENSOR_DELAY_GAME)
+        sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_GAME)
     }
 
     override fun onPause() {
@@ -39,14 +44,14 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
 
         //リスナーを解除
         sensorManager.unregisterListener(this)
+
         stopTimerTask()
     }
 
-
-
-    override fun onSensorChanged(event: SensorEvent?) {
-
-        if (event!!.sensor.type == Sensor.TYPE_ACCELEROMETER){
+    //加速度センサーの値は変わった時の処理
+    override fun onSensorChanged(event: SensorEvent) {
+        //各値を取得⇒0はX、1はY、2はZ
+        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER){
             sensorX = event.values[0]
             sensorY = event.values[1]
             sensorZ = event.values[2]
@@ -54,12 +59,17 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
     }
 
     private fun timerSet() {
-        runnable = Runnable {
-            kotlin.run{
-                canvasView.setPosition(sensorX, sensorY)
-                handler.postDelayed(runnable, period)
+
+        //別スレッドで行う処理
+        runnable = Runnable() {
+            run(){
+                //ボールの位置が変わるたびに再描画する
+                canvas.setPosition(sensorX, sensorY)
+                //↑を繰り返し行う処理⇒変数runnnableを0.1秒ごとに行う
+                handler.postDelayed(runnable, 100)
             }
         }
+        //最初の一回目はこのメソッドで実行宣言
         handler.post(runnable)
     }
 
