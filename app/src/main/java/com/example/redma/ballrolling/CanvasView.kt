@@ -25,13 +25,15 @@ class CanvasView(context : Context, attbs : AttributeSet) : View(context, attbs)
     }
 
     override fun onDraw(canvas: Canvas?) {
-        //背景色
+        //背景、半透明
         canvas?.drawColor(Color.argb(125, 0, 0, 255))
-        //透明
+
+        //ボールを画面に表示させる処理
         canvas?.drawBitmap(bmp!!, canvas?.getWidth()/2+xpos, canvas?.getHeight()/2+ypos,paint)
     }
 
-    public fun setPosition(xp : Float, yp : Float){
+    //ボールの位置を描画
+    public fun setPositionBall(xp : Float, yp : Float){
         var dT : Float = 0.8f
 
         val ax : Float = -xp*2
@@ -45,6 +47,10 @@ class CanvasView(context : Context, attbs : AttributeSet) : View(context, attbs)
 
         //再描画
         invalidate()
+    }
+
+    public fun setPositionMeteo() {
+        //TODO(ここで隕石を描画)
     }
 
 }

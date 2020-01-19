@@ -8,8 +8,6 @@ import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import androidx.core.content.getSystemService
-import androidx.core.os.postDelayed
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() , SensorEventListener{
@@ -18,6 +16,7 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
     private var sensorX : Float = 0f
     private var sensorY : Float = 0f
     private var sensorZ : Float = 0f
+    private lateinit var can : CanvasView
 
     private var period = 100L
     val handler : Handler = Handler()
@@ -48,7 +47,7 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
         stopTimerTask()
     }
 
-    //加速度センサーの値は変わった時の処理
+    //加速度センサーの値が変わった時の処理
     override fun onSensorChanged(event: SensorEvent) {
         //各値を取得⇒0はX、1はY、2はZ
         if (event.sensor.type == Sensor.TYPE_ACCELEROMETER){
@@ -64,8 +63,11 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
         runnable = Runnable() {
             run(){
                 //ボールの位置が変わるたびに再描画する
-                canvas.setPosition(sensorX, sensorY)
-                //↑を繰り返し行う処理⇒変数runnnableを0.1秒ごとに行う
+                canvas.setPositionBall(sensorX, sensorY)
+
+                //TODO(ここに隕石を描画する処理)⇒setPositionMeteo()
+
+                //runメソッドを繰り返し行う処理⇒変数runnnableを0.1秒ごとに行う
                 handler.postDelayed(runnable, 100)
             }
         }
