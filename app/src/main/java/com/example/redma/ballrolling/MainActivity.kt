@@ -1,6 +1,7 @@
 package com.example.redma.ballrolling
 
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -16,7 +17,6 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
     private var sensorX : Float = 0f
     private var sensorY : Float = 0f
     private var sensorZ : Float = 0f
-    private lateinit var can : CanvasView
 
     private var period = 100L
     val handler : Handler = Handler()
@@ -63,9 +63,13 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
         runnable = Runnable() {
             run(){
                 //ボールの位置が変わるたびに再描画する
-                canvas.setPositionBall(sensorX, sensorY)
+                if (canvas.setPositionBall(sensorX, sensorY)){
+                    val intent = Intent(this, GameOver::class.java)
+                    startActivity(intent)
+                }
 
-                //TODO(ここに隕石を描画する処理)⇒setPositionMeteo()
+
+
 
                 //runメソッドを繰り返し行う処理⇒変数runnnableを0.1秒ごとに行う
                 handler.postDelayed(runnable, 100)

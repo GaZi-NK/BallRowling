@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Ball Rolling</string>
+    <string name="game_over">ゲームオーバー</string>
 </resources>
