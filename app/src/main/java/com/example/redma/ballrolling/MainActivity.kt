@@ -67,11 +67,7 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
                     val intent = Intent(this, GameOver::class.java)
                     startActivity(intent)
                 }
-
-
-
-
-                //runメソッドを繰り返し行う処理⇒変数runnnableを0.1秒ごとに行う
+                                //runメソッドを繰り返し行う処理⇒変数runnnableを0.1秒ごとに行う
                 handler.postDelayed(runnable, 100)
             }
         }
