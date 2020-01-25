@@ -63,10 +63,11 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
         runnable = Runnable() {
             run(){
                 //ボールの位置が変わるたびに再描画する
-                if (canvas.setPositionBall(sensorX, sensorY)){
+                canvas.setPositionBall(sensorX, sensorY)
+                /*if (canvas.setPositionBall(sensorX, sensorY)){
                     val intent = Intent(this, GameOver::class.java)
                     startActivity(intent)
-                }
+                } */
                                 //runメソッドを繰り返し行う処理⇒変数runnnableを0.1秒ごとに行う
                 handler.postDelayed(runnable, 100)
             }
