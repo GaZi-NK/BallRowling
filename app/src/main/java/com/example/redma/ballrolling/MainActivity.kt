@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity : AppCompatActivity() , SensorEventListener{
 
@@ -64,11 +65,10 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
             run(){
                 //ボールの位置が変わるたびに再描画する
                 canvas.setPositionBall(sensorX, sensorY)
-                /*if (canvas.setPositionBall(sensorX, sensorY)){
+                if (canvas.hitChecked()){
                     val intent = Intent(this, GameOver::class.java)
                     startActivity(intent)
-                } */
-                                //runメソッドを繰り返し行う処理⇒変数runnnableを0.1秒ごとに行う
+                }                                 //runメソッドを繰り返し行う処理⇒変数runnnableを0.1秒ごとに行う
                 handler.postDelayed(runnable, 100)
             }
         }
