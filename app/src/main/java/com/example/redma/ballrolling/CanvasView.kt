@@ -13,7 +13,7 @@ class CanvasView(context: Context, attbs: AttributeSet) : View(context, attbs) {
     private var paint: Paint = Paint()
     private var bmp: Bitmap? = null
 
-    private var radias : Float = 50f //ボールの半径
+    private var radias : Float = 100f //ボールの半径
     private var xpos: Float = 0f //ボールの現在のx位置
     private var ypos: Float = 0f //ボールの現在のy位置
     private var preX: Float = 0f //現在の加速度
@@ -23,10 +23,6 @@ class CanvasView(context: Context, attbs: AttributeSet) : View(context, attbs) {
 
     //隕石の位置をリセット
     private var rakka2 = 0f
-
-    //画面縦、横の真ん中の座標を取得
-    val xc = (canvas.width / 2).toFloat()
-    val yc = (canvas.height / 2).toFloat()
 
     var player = Ball() //ボールのインスタンスを生成
 
@@ -128,12 +124,13 @@ class CanvasView(context: Context, attbs: AttributeSet) : View(context, attbs) {
     //ボールの衝突判定
     public fun hitChecked(): Boolean {
         //ボールの中心を取得
-        var ballCenterX = canvas.getWidth() / 2 + xpos
-        var ballCenterY = canvas.getHeight() / 2 + ypos
+        var ballCenterX = 600 + xpos
+        var ballCenterY = 828 + ypos
 
         for (i in meteo.indices){
-            if (ballCenterX - radias < meteo[i]!!.x + meteo[i]!!.rabius || ballCenterX + radias > meteo[i]!!.x - meteo[i]!!.rabius
-                && ballCenterY - radias < meteo[i]!!.y + meteo[i]!!.rabius || ballCenterY + radias > meteo[i]!!.y - meteo[i]!!.rabius){
+            if (ballCenterX - radias < meteo[i]!!.x + meteo[i]!!.rabius && ballCenterX + radias > meteo[i]!!.x - meteo[i]!!.rabius
+                && ballCenterY - radias < meteo[i]!!.y + meteo[i]!!.rabius && ballCenterY + radias > meteo[i]!!.y - meteo[i]!!.rabius){
+                return true
             }
         }
         return false

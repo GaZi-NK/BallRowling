@@ -9,6 +9,7 @@ import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
         //センサーマネージャーのインスタンスを取得
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         setContentView(R.layout.activity_main)
+
+        Log.d("TAG", "画面作成")
 
         timerSet()
     }
@@ -66,9 +69,11 @@ class MainActivity : AppCompatActivity() , SensorEventListener{
                 //ボールの位置が変わるたびに再描画する
                 canvas.setPositionBall(sensorX, sensorY)
                 if (canvas.hitChecked()){
+                    stopTimerTask()
                     val intent = Intent(this, GameOver::class.java)
                     startActivity(intent)
-                }                                 //runメソッドを繰り返し行う処理⇒変数runnnableを0.1秒ごとに行う
+                }
+                //runメソッドを繰り返し行う処理⇒変数runnnableを0.1秒ごとに行う
                 handler.postDelayed(runnable, 100)
             }
         }
