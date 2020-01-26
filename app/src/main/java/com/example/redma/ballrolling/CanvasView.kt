@@ -13,7 +13,7 @@ class CanvasView(context: Context, attbs: AttributeSet) : View(context, attbs) {
     private var paint: Paint = Paint()
     private var bmp: Bitmap? = null
 
-    private var radias : Float = 100f //ボールの半径
+    private var radias: Float = 100f //ボールの半径
     private var xpos: Float = 0f //ボールの現在のx位置
     private var ypos: Float = 0f //ボールの現在のy位置
     private var preX: Float = 0f //現在の加速度
@@ -49,7 +49,7 @@ class CanvasView(context: Context, attbs: AttributeSet) : View(context, attbs) {
         //スコアの表示
         paint.color = Color.BLACK
         paint.textSize = 20f
-        canvas.drawText(scoreText,50f,50f,paint)
+        canvas.drawText(scoreText, 50f, 50f, paint)
 
         //円の書式設定
         paint.color = Color.GREEN
@@ -57,19 +57,19 @@ class CanvasView(context: Context, attbs: AttributeSet) : View(context, attbs) {
         paint.isAntiAlias = true
 
         //ボールが画面外に出ないように
-         if(xc + xpos- radias < 0 && preX < 0){  // Xが左端に出ないように＋壁にぶつかったら減速させる処理
-             preX = -preX / 1.5f //加速度をマイナス方向に変換⇒ボールが壁に当たって反対へ行く
-             xpos = radias - xc + 1f  //はみ出ないようにする。⇒ボール位置は画面中央+xposできまるのでxposを画面端から半径分でないように調整する
-         }else if(xc + xpos + radias > canvas.width && preX > 0){
-                preX = -preX / 1.5f
-             xpos = xc - radias + 1f
-         }
+        if (xc + xpos - radias < 0 && preX < 0) {  // Xが左端に出ないように＋壁にぶつかったら減速させる処理
+            preX = -preX / 1.5f //加速度をマイナス方向に変換⇒ボールが壁に当たって反対へ行く
+            xpos = radias - xc + 1f  //はみ出ないようにする。⇒ボール位置は画面中央+xposできまるのでxposを画面端から半径分でないように調整する
+        } else if (xc + xpos + radias > canvas.width && preX > 0) {
+            preX = -preX / 1.5f
+            xpos = xc - radias + 1f
+        }
 
-        if (yc + ypos - radias < 0 && preY < 0){
+        if (yc + ypos - radias < 0 && preY < 0) {
             preY = -preY / 1.5f
             ypos = radias - yc + 1f
-        }else if (yc + ypos + radias > canvas.height - 0 && preY > 0){
-            preY = -preY /1.5f
+        } else if (yc + ypos + radias > canvas.height - 0 && preY > 0) {
+            preY = -preY / 1.5f
             ypos = yc - radias - 1f
         }
 
@@ -84,25 +84,33 @@ class CanvasView(context: Context, attbs: AttributeSet) : View(context, attbs) {
             if (meteo[i]!!.y < canvas.height.toFloat()) { //隕石が画面内にある時の処理
                 if (meteo[i]?.x == 0f && meteo[i]?.y == 0f) { //隕石の初期生成じに隕石の位置、半径、落ちる速度を決める
                     meteo[i]?.x = canvas.width.toFloat() / 6 * (i + 1) //隕石のxを設定
-                    meteo[i]?.y = (Math.random() * 10 + 0).toFloat()   //隕石のyを設定
+                    meteo[i]?.y = 0f //隕石のyを設定
                     meteo[i]?.rabius = (Math.random() * 70).toFloat()  //隕石の半径を設定
-                    meteo[i]?.sp = (Math.random() * (20 - 1) + 1).toFloat() //隕石の落下速度を設定
+                    meteo[i]?.sp = fallSpeed() //隕石の落下速度を設定
                 }
+                canvas.drawCircle(meteo[i]!!.x, meteo[i]!!.y, meteo[i]!!.rabius, paint) //再描画
                 meteo[i]!!.y += meteo[i]!!.sp //現在の位置+隕石の落下速度
-                canvas.drawCircle(meteo[i]!!.x , meteo[i]!!.y , meteo[i]!!.rabius, paint) //再描画
                 //画面外に行ったときにまた上から落ちてくるように処理
             } else {        //隕石が画面外に行った時の処理
                 meteo[i]?.x = 0f
                 meteo[i]?.y = 0f
                 score += 1  //隕石をよけれたと判定しスコア1アップ
-                meteo[i]!!.y = 0f //隕石を画面上にセット
-                canvas.drawCircle(canvas.width.toFloat() / 6 * (i + 1) , rakka2, meteo[i]!!.rabius, paint) //再描画
+                meteo[i]?.x = canvas.width.toFloat() / 6 * (i + 1) //隕石のxを設定
+                meteo[i]?.rabius = (Math.random() * 70).toFloat()  //隕石の半径を設定
+                meteo[i]?.sp = fallSpeed() //隕石の落下速度を設定
+                canvas.drawCircle(
+                    meteo[i]!!.x,
+                    meteo[i]!!.y,
+                    meteo[i]!!.rabius,
+                    paint
+                )
+                meteo[i]!!.y += meteo[i]!!.sp //現在の位置+隕石の落下速度
             }
         }
     }
 
     //ボールの位置を取得
-    public fun setPositionBall(xp: Float, yp: Float) {
+    fun setPositionBall(xp: Float, yp: Float) {
 
 
         var dT: Float = 0.8f
@@ -122,25 +130,26 @@ class CanvasView(context: Context, attbs: AttributeSet) : View(context, attbs) {
     }
 
     //ボールの衝突判定
-    public fun hitChecked(): Boolean {
+    fun hitChecked(): Boolean {
         //ボールの中心を取得
         var ballCenterX = 600 + xpos
         var ballCenterY = 828 + ypos
 
-        for (i in meteo.indices){
+        for (i in meteo.indices) {
             if (ballCenterX - radias < meteo[i]!!.x + meteo[i]!!.rabius && ballCenterX + radias > meteo[i]!!.x - meteo[i]!!.rabius
-                && ballCenterY - radias < meteo[i]!!.y + meteo[i]!!.rabius && ballCenterY + radias > meteo[i]!!.y - meteo[i]!!.rabius){
+                && ballCenterY - radias < meteo[i]!!.y + meteo[i]!!.rabius && ballCenterY + radias > meteo[i]!!.y - meteo[i]!!.rabius
+            ) {
                 return true
             }
         }
         return false
     }
 
-    public fun fallSpeed():Float{
+    fun fallSpeed(): Float {
         val sp = (Math.random() * 20).toFloat()
-        if (sp > 10){
+        if (sp > 10) {
             return sp
-        }else{
+        } else {
             fallSpeed()
         }
         return sp
