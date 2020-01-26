@@ -135,4 +135,14 @@ class CanvasView(context: Context, attbs: AttributeSet) : View(context, attbs) {
         }
         return false
     }
+
+    public fun fallSpeed():Float{
+        val sp = (Math.random() * 20).toFloat()
+        if (sp > 10){
+            return sp
+        }else{
+            fallSpeed()
+        }
+        return sp
+    }
 }
